@@ -21,6 +21,7 @@ class Game:
     def on_init(self):
         pygame.init()
         self._display = pygame.display.set_mode((self.windowWidth,self.windowHeight), pygame.HWSURFACE)
+        pygame.display.set_caption("Text-Based RPG Game (No Name)")
 
     def on_event(self, event):
         if event.type == QUIT:
