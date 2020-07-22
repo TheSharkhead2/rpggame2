@@ -47,6 +47,7 @@ class Game:
                 self.on_event(event)
             self.on_loop()
             self.on_render()
+            pygame.display.update()
         self.on_quit()
 
 
