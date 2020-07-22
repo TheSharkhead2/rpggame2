@@ -23,5 +23,5 @@ class Player:
         pass
 
     def _xp_level_limit(self):
-        #returns xp needed for next level
+        #returns xp needed for next level (exponential scale)
         return(self.baseLevelXp * self.levelXpMulti**(self.level - 1))

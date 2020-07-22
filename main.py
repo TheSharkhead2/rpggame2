@@ -12,6 +12,7 @@ from screeninfo import get_monitors #found in: https://stackoverflow.com/questio
 #file imports from game directory
 from player import Player
 
+#Temporary import/import location
 currentPlayer = Player()
 
 #template for class from: https://pythonspot.com/game-development-with-pygame/
@@ -34,16 +35,16 @@ class Game:
             self._running = False
 
         #player test
-        if event.type == KEYDOWN:
-            if event.key == K_0:
-                currentPlayer.xp_gain(10)
+        if event.type == KEYDOWN: #Key labeling in pygame: https://www.pygame.org/docs/ref/key.html
+            if event.key == K_0: #This is temp, testing for player leveling and key input
+                currentPlayer.xp_gain(10) 
 
     def on_loop(self):
         pass
 
     def on_render(self):
         self._display.fill((255,255,255))
-        #render test:
+        #render test (testing rendering and player leveling):
         testFont = pygame.font.SysFont('Times New Roman', 30)
         self._display.blit(testFont.render("Player Level: " + str(currentPlayer.level), True, (0,0,0)), (20, 20))
         self._display.blit(testFont.render("Player XP: " + str(currentPlayer.xp), True, (0,0,0)), (20, 100))
