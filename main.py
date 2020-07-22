@@ -4,9 +4,15 @@
 #libraries used in "dependencies.txt"
 #relying on pygame for visual library
 
+#external library import
 import pygame, sys
 from pygame.locals import *
 from screeninfo import get_monitors #found in: https://stackoverflow.com/questions/3129322/how-do-i-get-monitor-resolution-in-python
+
+#file imports from game directory
+from player import Player
+
+currentPlayer = Player()
 
 #template for class from: https://pythonspot.com/game-development-with-pygame/
 class Game:
@@ -27,6 +33,11 @@ class Game:
         if event.type == QUIT:
             self._running = False
 
+        #player test
+        if event.type == KEYDOWN:
+            if event.key == K_0:
+                currentPlayer.xp_gain(10)
+
     def on_loop(self):
         pass
 
@@ -34,7 +45,8 @@ class Game:
         self._display.fill((255,255,255))
         #render test:
         testFont = pygame.font.SysFont('Times New Roman', 30)
-        self._display.blit(testFont.render("Hello World", True, (0,0,0)), testFont.render("Hello World", True, (0,0,0)).get_rect())
+        self._display.blit(testFont.render("Player Level: " + str(currentPlayer.level), True, (0,0,0)), (20, 20))
+        self._display.blit(testFont.render("Player XP: " + str(currentPlayer.xp), True, (0,0,0)), (20, 100))
 
     def on_quit(self):
         pygame.quit()
