@@ -1,9 +1,3 @@
-#main file
-#information:
-#citations in comments (links provided)
-#libraries used in "dependencies.txt"
-#relying on pygame for visual library
-
 #external library import
 import pygame, sys
 from pygame.locals import *
