@@ -33,10 +33,42 @@ class Weapon:
     def _base_damage(self):
         return(self.baseDamage * self.rarityAttackMulti[self.rarity]) #return scaled damage of weapon
 
-    def calculate_damage(self, crit=False):
-        damageDeltaMulti = random.random() * self.damageConsistency + 1 #calculate random multiplier for damage within damage inconsistancy range 
-        if random.randint(1,2) == 2: 
-            damageDeltaMulti *= -1 #flip half of these multipliers to negative (loss in damage)
+    def calculate_damage(self, crit=False): #returns base damage of weapon +/- some inconsistancy in the weapon. 
+        damageDeltaMulti = random.random() * self.damageConsistency * random.choice([-1, 1]) + 1 #calculate random multiplier for damage within damage inconsistancy range (this either does nothing, reduces damage, or increases)
 
-        damage = self._base_damage() * damageDeltaMulti
+        damage = self._base_damage() * damageDeltaMulti 
         
+        if crit == True: 
+            return(damage * self.critMultiplierBase)
+        return(damage) 
+        
+class Sword(Weapon):
+
+    otherWeaponEfficacy = {} #how effective against other weapons... scaler used for attack damage, blocking chance, etc
+
+    def __init__(self, name, rarity, level, attributes, baseDamage): #notes for below are same as Weapon class
+        self.weaponType = 'sword'
+
+        self.name = name 
+        self.rarity = rarity 
+        self.level = level
+        self.attributes = attributes 
+        self.baseDamage = baseDamage
+        self.critMulti = Weapon.critChanceBase * 1
+        self.critChance = Weapon.critChanceBase * 1
+        self.damageConsistency = Weapon.damageConsistencyBase * 1
+        self.swapSpeed = Weapon.swapSpeedBase * 1
+        self.blockChance = Weapon.blockChanceBase * 1
+        self.bypassBlockChance = Weapon.bypassBlockChanceBase * 1
+        self.counterAttackChance = Weapon.counterAttackChanceBase * 1
+        self.avoidCounterAttackChance = Weapon.avoidCounterAttackChanceBase * 1
+
+    def calculate_damage_full(self):
+        if random.random() < self.critChance:
+            crit = True
+        else:
+            crit = False
+
+        initialDamage = self.calculate_damage(crit=crit)
+
+        #unfinished: need code for how effective against other weapons
