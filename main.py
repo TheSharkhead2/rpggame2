@@ -45,14 +45,14 @@ class Game:
         pass
 
     def on_render(self):
-        self._display.fill((255,255,255))
         #render test (testing rendering and player leveling):
         testFont = pygame.font.SysFont('Times New Roman', 30)
         if self._rendering == "title":
+            self._display.fill((255,255,255))
             self._display.blit(testFont.render("Player Level: " + str(currentPlayer.level), True, (0,0,0)), (20, 20))
             self._display.blit(testFont.render("Player XP: " + str(currentPlayer.xp), True, (0,0,0)), (20, 100))
         elif self._rendering == "map":
-            self.map.renderMap(self._display, pygame, testFont, inputs=self.map_inputs)
+            self.map.renderMap(self._display, testFont, self.map_inputs, self.windowWidth, self.windowHeight)
             self.map_inputs = []
 
     def on_quit(self):
