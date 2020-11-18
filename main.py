@@ -5,6 +5,7 @@ from screeninfo import get_monitors #found in: https://stackoverflow.com/questio
 
 #file imports from game directory
 from player import Player
+from worldmap import Map
 
 #Temporary import/import location
 currentPlayer = Player()
@@ -18,6 +19,9 @@ class Game:
     def __init__(self):
         self._running = True
         self._display = None
+        self._rendering = "map"
+        self.map = Map()
+        self.map_inputs = [] #backlog play inputs to send to map class
 
     def on_init(self):
         pygame.init()
@@ -32,6 +36,10 @@ class Game:
         if event.type == KEYDOWN: #Key labeling in pygame: https://www.pygame.org/docs/ref/key.html
             if event.key == K_0: #This is temp, testing for player leveling and key input
                 currentPlayer.xp_gain(10) 
+            if event.key == K_ESCAPE:
+                self._rendering = "title"
+            if event.key == K_w or event.key == K_UP and self._rendering == "map": #if player presses "w" or up arrow get that information to map 
+                self.map_inputs.append("up")
 
     def on_loop(self):
         pass
@@ -40,8 +48,12 @@ class Game:
         self._display.fill((255,255,255))
         #render test (testing rendering and player leveling):
         testFont = pygame.font.SysFont('Times New Roman', 30)
-        self._display.blit(testFont.render("Player Level: " + str(currentPlayer.level), True, (0,0,0)), (20, 20))
-        self._display.blit(testFont.render("Player XP: " + str(currentPlayer.xp), True, (0,0,0)), (20, 100))
+        if self._rendering == "title":
+            self._display.blit(testFont.render("Player Level: " + str(currentPlayer.level), True, (0,0,0)), (20, 20))
+            self._display.blit(testFont.render("Player XP: " + str(currentPlayer.xp), True, (0,0,0)), (20, 100))
+        elif self._rendering == "map":
+            self.map.renderMap(self._display, pygame, testFont, inputs=self.map_inputs)
+            self.map_inputs = []
 
     def on_quit(self):
         pygame.quit()

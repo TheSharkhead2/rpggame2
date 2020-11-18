@@ -13,7 +13,7 @@ class Weapon:
     avoidCounterAttackChanceBase = 1 #how resistant you are to counter attacks with this weapon. Same affects as "bypassBlockChanceBase" on "blockChanceBase" (during swap, stat comes from weapon being swapped out)
 
     rarityAttackMulti = {"common" : 1, "uncommon" : 1.1, "rare" : 1.3, "epic" : 1.5, "legendary" : 1.75} #multiplier for damage with weapons at different rarities. May be revisited in future for balancing
-    levelMulti = 7 #multiplier for damage of weapon based on level (ie base damage * levelMulti * level). Up to change
+    levelMulti = 1.5 #multiplier for damage of weapon based on level (ie base damage * levelMulti * level). Up to change
 
     def __init__(self, name, rarity, level, attributes, baseDamage, critMulti, critChance, damageConsistency, swapSpeed, blockChance, bypassBlockChance, counterAttackChance, avoidCounterAttackChance): #variables: [critMulti, critChance, damageConsistency, swapSpeed, blockChance, bypassBlockChance, counterAttackChance] represent scalers for differences between weapon classes
         self.name = name #weapon name
@@ -31,7 +31,7 @@ class Weapon:
         self.avoidCounterAttackChance = self.avoidCounterAttackChanceBase * avoidCounterAttackChance
     
     def _base_damage(self):
-        return(self.baseDamage * self.rarityAttackMulti[self.rarity]) #return scaled damage of weapon
+        return(self.baseDamage * self.rarityAttackMulti[self.rarity] * self.levelMulti * self.level) #return scaled damage of weapon
 
     def calculate_damage(self, crit=False): #returns base damage of weapon +/- some inconsistancy in the weapon. 
         damageDeltaMulti = random.random() * self.damageConsistency * random.choice([-1, 1]) + 1 #calculate random multiplier for damage within damage inconsistancy range (this either does nothing, reduces damage, or increases)
@@ -62,9 +62,11 @@ class Sword(Weapon):
         self.bypassBlockChance = Weapon.bypassBlockChanceBase * 1
         self.counterAttackChance = Weapon.counterAttackChanceBase * 1
         self.avoidCounterAttackChance = Weapon.avoidCounterAttackChanceBase * 1
+        self.twoHanded = False #can you have a secondary weapon or not 
+        self.weight = 2 #weight of weapon, can affect dodge chances and stamina 
 
     def calculate_damage_full(self):
-        if random.random() < self.critChance:
+        if random.random() < self.critChance: #crit change should also be scaled by quick-time event
             crit = True
         else:
             crit = False
