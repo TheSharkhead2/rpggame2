@@ -38,8 +38,25 @@ class Game:
                 currentPlayer.xp_gain(10) 
             if event.key == K_ESCAPE:
                 self._rendering = "title"
-            if event.key == K_w or event.key == K_UP and self._rendering == "map": #if player presses "w" or up arrow get that information to map 
+            #detect movement begin commands
+            if event.key == K_w or event.key == K_UP and self._rendering == "map": 
                 self.map_inputs.append("up")
+            if event.key == K_s or event.key == K_DOWN and self._rendering == "map":
+                self.map_inputs.append("down")
+            if event.key == K_a or event.key == K_LEFT and self._rendering == "map": 
+                self.map_inputs.append("left")
+            if event.key == K_d or event.key == K_RIGHT and self._rendering == "map":  
+                self.map_inputs.append("right")
+        elif event.type == KEYUP:
+            #detect movement end commands
+            if event.key == K_w or event.key == K_UP and self._rendering == "map": 
+                self.map_inputs.append("upstop")
+            if event.key == K_s or event.key == K_DOWN and self._rendering == "map":  
+                self.map_inputs.append("downstop")
+            if event.key == K_a or event.key == K_LEFT and self._rendering == "map":  
+                self.map_inputs.append("leftstop")
+            if event.key == K_d or event.key == K_RIGHT and self._rendering == "map":  
+                self.map_inputs.append("rightstop")
 
     def on_loop(self):
         pass
