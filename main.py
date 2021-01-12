@@ -63,7 +63,7 @@ class Game:
 
     def on_render(self):
         #render test (testing rendering and player leveling):
-        testFont = pygame.font.SysFont('Times New Roman', 30)
+        testFont = pygame.font.SysFont('Times New Roman', 20)
         if self._rendering == "title":
             self._display.fill((255,255,255))
             self._display.blit(testFont.render("Player Level: " + str(currentPlayer.level), True, (0,0,0)), (20, 20))

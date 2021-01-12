@@ -70,21 +70,41 @@ class Map:
     def _movePlayer(self):
         #move player
         if self.movingUp:
-            self.player_location_exact = (self.player_location_exact[0], self.player_location_exact[1]+0.1)
-        if self.movingDown:
             self.player_location_exact = (self.player_location_exact[0], self.player_location_exact[1]-0.1)
+            print(self.player_location_exact)
+            print("moving up")
+        if self.movingDown:
+            self.player_location_exact = (self.player_location_exact[0], self.player_location_exact[1]+0.1)
+            print(self.player_location_exact)
+            print("moving down")
         if self.movingLeft:
-            self.player_location_exact = (self.player_location_exact[0]+0.1, self.player_location_exact[1])
-        if self.movingRight:
             self.player_location_exact = (self.player_location_exact[0]-0.1, self.player_location_exact[1])
+            print(self.player_location_exact)
+            print("moving left")
+        if self.movingRight:
+            self.player_location_exact = (self.player_location_exact[0]+0.1, self.player_location_exact[1])
+            print(self.player_location_exact)
+            print("moving right")
+
+        if self.player_location_exact[0] > self.tileSize * (self.player_location[0] + 1):
+            self.player_location = (self.player_location[0] + 1, self.player_location[1]) 
+        if self.player_location_exact[0] < self.tileSize * (self.player_location[0] - 1):
+            self.player_location = (self.player_location[0] - 1, self.player_location[1])
+            
+        if self.player_location_exact[1] > self.tileSize * (self.player_location[1] + 1):
+            self.player_location = (self.player_location[0], self.player_location[1] + 1) 
+        if self.player_location_exact[1] < self.tileSize * (self.player_location[1] - 1):
+            self.player_location = (self.player_location[0], self.player_location[1] - 1)
+
 
 
     def renderMap(self, _display, font, inputs, windowWidth, windowHeight):
         self._processUserInput(inputs) #set enviroment variables for inputs
         self._movePlayer() #run player movement 
 
-        _display.fill((0,0,0))
-        _display.blit(font.render("You in map, yes?", True, (255,255,255)), (20, 100))
+        _display.fill((0,0,0)) #make screen black
+        _display.blit(font.render(str(self.player_location), True, (255,255,255)), (20,20))
+        _display.blit(font.render(str(self.player_location_exact), True, (255,255,255)), (20,50))
         center_square_render = (int(self._centerScreen(windowWidth, windowHeight)[0] - self.tileSize/2), int(self._centerScreen(windowWidth, windowHeight)[1] - self.tileSize/2)) #location of top left corner for gridsize
 
         renderOffset = self._playerLocationOffset() #grab value for offset from rendering with player in center of middle tile (when player not in center)
@@ -92,12 +112,14 @@ class Map:
         endpoints = [] #list to record all endpoints for walls
         for offsetx in range(-4,5):
             for offsety in range(-4, 5):
-                currentlyRendering = (self.player_location[0] + offsety, self.player_location[1] + offsetx)
+                currentlyRendering = (self.player_location[1] + offsety, self.player_location[0] + offsetx)
                 if currentlyRendering[0] < 0 or currentlyRendering[1] < 0 or currentlyRendering[0] > len(self.current_map['map'][0]) or currentlyRendering[1] > len(self.current_map['map']): #don't render a tile with nothing
+                    pass
+                elif currentlyRendering[0] > len(self.current_map['map']) - 1 or currentlyRendering[1] > len(self.current_map['map'][0]) - 1: #don't render out of map
                     pass
                 else:
                     renderPosBase = (center_square_render[0] + self.tileSize*offsetx, center_square_render[1] + self.tileSize*offsety) #render position if player in center of square 
-                    renderPos = (renderPosBase[0] + renderOffset[0], renderPosBase[1] + renderOffset[1])
+                    renderPos = (renderPosBase[0] - renderOffset[0], renderPosBase[1] - renderOffset[1])
                     if self.current_map['map'][currentlyRendering[0]][currentlyRendering[1]] == 0:
                         _display.blit(self.baseFloorImg, renderPos)
                     elif self.current_map['map'][currentlyRendering[0]][currentlyRendering[1]] == 1:
